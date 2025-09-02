@@ -1,0 +1,18 @@
+# Core dependencies
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-community>=0.0.1
+langgraph>=0.0.15
+langchain-litellm>=0.1.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Environment and logging
+python-dotenv>=1.0.0
+loguru>=0.7.0
+
+# LLM integration
+litellm>=1.0.0
+openai>=1.0.0
