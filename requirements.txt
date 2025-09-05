@@ -16,3 +16,5 @@ loguru>=0.7.0
 # LLM integration
 litellm>=1.0.0
 openai>=1.0.0
+
+kagglehub>=0.3.13

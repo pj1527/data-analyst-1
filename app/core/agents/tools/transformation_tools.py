@@ -90,3 +90,30 @@ def add_new_column_from_math_operation(df: pd.DataFrame, column_name: str, opera
             raise DataProcessingError(operation="add new column from math operation", details=f"An unexpected error occurred during the operation: {e}")
         raise
     return df
+
+
+def merge_dataframes(
+    primary_df: pd.DataFrame,
+    mapping_df: pd.DataFrame,
+    primary_df_col: str,
+    mapping_df_col: str,
+    new_column_name: str
+) -> pd.DataFrame:
+    if primary_df_col not in primary_df.columns:
+        raise ColumnNotFoundError(primary_df_col, list(primary_df.columns))
+    
+    if mapping_df_col not in mapping_df.columns:
+        raise ColumnNotFoundError(mapping_df_col, list(mapping_df.columns))
+    
+    try:
+        merged_df = pd.merge(
+            primary_df,
+            mapping_df,
+            left_on=primary_df_col,
+            right_on=mapping_df_col,
+            how='left'
+        )
+        merged_df.rename(columns={merged_df.columns[-1]: new_column_name}, inplace=True)
+        return merged_df
+    except Exception as e:
+        raise DataProcessingError(operation="merge dataframes", details=f"An error occurred during the merge operation: {str(e)}")
