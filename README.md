@@ -49,7 +49,7 @@ This is a **Data Analyst Agent** built with LangChain, designed to clean, transf
 
 ## 📂 Dataset
 
-The agent operates on the **Student Stress Monitoring Datasets**.
+The test_agent.py is currently using the **Student Stress Monitoring Datasets** as an example, you can change it to use any other dataset.
 
 1.  **Download the dataset:**
     Download the dataset from Kaggle: [https://www.kaggle.com/datasets/mdsultanulislamovi/student-stress-monitoring-datasets](https://www.kaggle.com/datasets/mdsultanulislamovi/student-stress-monitoring-datasets)
