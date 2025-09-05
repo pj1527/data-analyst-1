@@ -8,6 +8,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from app.core.agents.tools import inspection_tools, transformation_tools
+from app.core.agents.prompts.data_agent_prompt import DATA_AGENT_PROMPT
 
 
 class DataFrameType(Enum):
@@ -75,11 +76,7 @@ class DataAgent:
 
         Subclasses can extend or modify this prompt to provide specific instructions.
         """
-        system_message = (
-            "You are an expert assistant for working with pandas DataFrames. "
-            "Your goal is to help the user by providing information or performing operations "
-            "on the provided DataFrame. Use the available tools to answer questions."
-        )
+        system_message = DATA_AGENT_PROMPT
         return ChatPromptTemplate.from_messages([
             ("system", system_message),
             MessagesPlaceholder(variable_name="chat_history"),
