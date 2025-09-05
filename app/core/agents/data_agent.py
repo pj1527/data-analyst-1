@@ -1,18 +1,18 @@
 import pandas as pd
+from enum import Enum
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
-from langchain_litellm.chat_models import ChatLiteLLM
-from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.tools import tool, BaseTool
+from langchain_litellm.chat_models import ChatLiteLLM
+from langchain_core.messages import AIMessage, HumanMessage
+from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from app.core.agents.tools import inspection_tools, transformation_tools
-from enum import Enum
 
 
 class DataFrameType(Enum):
     PRIMARY = 'primary'
     MAPPING = 'mapping'
-    TMP = 'tmp'
 
 
 class ToolResponse(BaseModel):
@@ -40,12 +40,12 @@ class DataAgent:
         self.dfs = {
             DataFrameType.PRIMARY: df,
             DataFrameType.MAPPING: mapping_df,
-            DataFrameType.TMP: None
         }
         self.llm = llm
         self.tools = self.get_tools()
         self.prompt = self.get_prompt()
         self.agent_executor = self.create_executor()
+        self.chat_history = []
 
     def _get_df(self, df_type: DataFrameType) -> Optional[pd.DataFrame]:
         return self.dfs[df_type]
@@ -98,7 +98,10 @@ class DataAgent:
         """
         Runs a query through the agent and returns the result.
         """
-        return self.agent_executor.invoke({"input": query, "chat_history": []})
+        result = self.agent_executor.invoke({"input": query, "chat_history": self.chat_history})
+        self.chat_history.append(HumanMessage(content=query))
+        self.chat_history.append(AIMessage(content=result['output']))
+        return result
 
     @tool
     def get_column_names(self, df_type: DataFrameType = DataFrameType.PRIMARY) -> ToolResponse:
